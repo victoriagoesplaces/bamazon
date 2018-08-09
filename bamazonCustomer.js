@@ -77,7 +77,7 @@ function userChoice() {
           var newStock = (res[i].stock_quantity - answer.units);
           var idChoice = (answer.choice);
           
-          connection.query("UPDATE products SET ? WHERE ?", newStock, idChoice);
+          connection.query("UPDATE products SET ? WHERE ?", [{stock_quantity: newStock}, {id: idChoice}]);
           moreItems();
         }
       }
