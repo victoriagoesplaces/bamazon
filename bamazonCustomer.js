@@ -18,22 +18,94 @@ connection.connect(function(err) {
    
     console.log('connected as id ' + connection.threadId);
    showTable();
+});
+
+
+function showTable() {
+  var table = new Table({
+      head: ['item_id', 'product_name', 'department_name','price', 'stock_quantity'], 
+      colWidths: [10, 30, 30, 20, 20]
   });
 
+  products()
 
-  function showTable() {
-    var table = new Table({
-        head: ['item_id', 'product_name', 'department_name','price', 'stock_quantity'], 
-        colWidths: [10, 30, 30, 20, 10]
-    });
+  function products() {
+
     connection.query("SELECT * FROM products", function(err, res) {
-      if (err) throw err;
-      console.log(res);
-     
+   
+      for  (var i = 0; i < res.length; i++) {
+        var id = res[i].id;
+        var product = res[i].product_name;
+        var department = res[i].department_name;
+        var price = res[i].price;
+        var stock = res[i].stock_quantity;
+
+
+        table.push(
+          [id, product, department, price, stock]
+          );   
+      }
+
+      console.log(table.toString());
+        userChoice()
     });
   } 
+} 
   
+function userChoice() {
+  inquirer
+    .prompt([
+    {
+      name: "choice",
+      type: "input",
+      message: "What product ID would you like?"
+    },
+    {
+      name: "units",
+      type: "input",
+      message: "How many units of the product would like to buy?"
+    }
+  ])
+  .then(function(answer) {
+    connection.query("SELECT * FROM products WHERE id=?", answer.choice, function(err, res) {
+      for  (var i = 0; i < res.length; i++) {
+        if (answer.choice > res[i].stock_quantity) {
+          console.log("Insufficient quantity!");
+        }
+        else {
+          console.log("Order was successfully submitted");
+          var newStock = (res[i].stock_quantity - answer.units);
+          var idChoice = (answer.choice);
+          
+          connection.query("UPDATE products SET ? WHERE ?", newStock, idChoice);
+          moreItems();
+        }
+      }
+    })
+  })  
+}
+
+function moreItems() {
+  inquirer
+    .prompt([
+    {
+      name: "more",
+      type: "confirm",
+      message: "Would you like another item?",
+      default: true
+    }
+  ])
+  .then(function(yesNo) {
+    console.log(yesNo.more);
+
+    if (yesNo.more === true){
+      showTable();
+    }
+    else {
+      connection.end()
+    } 
+  });
+}
+
+
   
-  
-  
-//   connection.end();
