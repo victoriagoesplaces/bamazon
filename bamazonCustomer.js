@@ -76,7 +76,10 @@ function userChoice() {
           console.log("Order was successfully submitted");
           var newStock = (res[i].stock_quantity - answer.units);
           var idChoice = (answer.choice);
-          
+          var totalPrice = (answer.units * res[i].price);
+
+          console.log("Your total order was $" + totalPrice);
+
           connection.query("UPDATE products SET ? WHERE ?", [{stock_quantity: newStock}, {id: idChoice}]);
           moreItems();
         }
