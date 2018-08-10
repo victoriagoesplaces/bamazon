@@ -7,9 +7,10 @@ bamazon is a command line based app similar to amazon.
 - Clone this repository to your machine
 - In your terminal or command line change directory to bamazon folder
 - Run the following code in the terminal/command line:
-    ```
-    npm install
-    ```
+   
+```
+npm install
+ ```
 
 ## How to use?
 
