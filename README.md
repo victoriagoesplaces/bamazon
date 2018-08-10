@@ -30,4 +30,4 @@ If the inventory is not available, the command line will display "Insufficient q
 
 User bamazon preview 
 
-![screenshot](screenshots/bamazon.png "my-tweets")
+![screenshot](screenshots/bamazon.png "bamazon")
